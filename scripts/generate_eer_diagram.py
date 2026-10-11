@@ -166,7 +166,7 @@ def draw_eer_diagram():
         (78, 73, 5.2, 2.3, "Phase_id", True),
         (89, 76, 5.8, 2.3, "Current_state", False),
         (100, 73, 6.5, 2.3, "Duration_seconds", False),
-        (102, 60, 5.8, 2.3, "Last_updated", False),
+        (106, 60, 5.8, 2.3, "Last_updated", False),
     ]
     for ax_pos, ay_pos, rx, ry, name, is_pk in attrs_phase:
         draw_line(E_PHASE, (ax_pos, ay_pos))
@@ -191,15 +191,15 @@ def draw_eer_diagram():
         (72, 9, 5.2, 2.3, "Audit_id", True),
         (83, 7, 5.2, 2.3, "Old_state", False),
         (94, 7, 5.2, 2.3, "New_state", False),
-        (102, 16, 5.4, 2.3, "Changed_at", False),
-        (102, 28, 5.8, 2.3, "Trigger_source", False),
+        (103, 16, 5.4, 2.3, "Changed_at", False),
+        (103, 28, 5.8, 2.3, "Trigger_source", False),
     ]
     for ax_pos, ay_pos, rx, ry, name, is_pk in attrs_audit:
         draw_line(E_AUDIT, (ax_pos, ay_pos))
         draw_attribute(ax_pos, ay_pos, rx, ry, name, is_pk)
 
     # Title Banner
-    ax.text(55, 3.5, "SmartFlow Grid: Extended Entity-Relationship (EER) Model (Chen Academic Notation)",
+    ax.text(55, 3.5, "SmartFlow Grid: Extended Entity-Relationship (EER) Model",
             ha="center", va="center", fontsize=15, fontweight="bold", color="#1b5e20")
 
     png_path = "d:/Projects/DBMS Case Study/docs/figures/SmartFlow_Grid_EER_Diagram.png"
