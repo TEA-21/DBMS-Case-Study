@@ -18,12 +18,25 @@ This document is specifically tailored for **Review 1 Presentation & Evaluation 
 
 ## 2. Step-by-Step Live Demonstration Script
 
-### Step 1: Run the Interactive Demo Suite
-Execute the automated demonstration runner in terminal:
-```bash
-python scripts/run_review1_demo.py
-```
-This script runs the entire sequence with formatted table output and constraint violation tests.
+### Step 1: One-Click Demonstration Window Popups
+Choose the demonstration format preferred by your evaluator:
+
+1. **Desktop Showcase Window (Recommended):**
+   Double-click [`run_gui.bat`](file:///d:/Projects/DBMS%20Case%20Study/run_gui.bat) or run:
+   ```bash
+   python scripts/review_1_showcase.py
+   ```
+   *A dedicated application window pops up immediately with live SQL command execution, syntax highlighting, tabular results, interactive query buttons, the full academic EER Diagram, and the 10-Mark Rubric checklist.*
+
+2. **Terminal Demonstration Window:**
+   Double-click [`run_terminal.bat`](file:///d:/Projects/DBMS%20Case%20Study/run_terminal.bat) or run:
+   ```bash
+   python scripts/run_review1_demo.py
+   ```
+   *A command-line terminal window pops up, executes all commands and tests, formats the result tables, and remains open for evaluator inspection.*
+
+3. **Master Launcher:**
+   Double-click [`run_demo.bat`](file:///d:/Projects/DBMS%20Case%20Study/run_demo.bat) to choose between the GUI showcase or the terminal showcase on launch.
 
 ### Step 2: Database Native Execution (For Evaluators using Oracle / Postgres)
 - **In Oracle SQL Developer / Live SQL:**
