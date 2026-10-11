@@ -54,7 +54,22 @@ Maintains an immutable historical record of all signal transitions triggered aut
 | **Intersection** | Has | **Lane** | $1 : N$ (One-to-Many) | `Lane.Intersection_ID` | `ON DELETE CASCADE` |
 | **Lane** | Governed By | **Signal_Phase** | $1 : 1$ (One-to-One) | `Signal_Phase.Lane_ID` | `ON DELETE CASCADE` |
 | **Lane** | Records | **Sensor_Log** | $1 : N$ (One-to-Many) | `Sensor_Log.Lane_ID` | `ON DELETE CASCADE` |
-| **Signal_Phase** | Generates | **Audit_Traffic_Log** | $1 : N$ (One-to-Many) | `Audit_Traffic_Log.Phase_ID` | `ON DELETE CASCADE` |
+---
+
+## 2. Extended Entity-Relationship (EER) Model (Chen Notation)
+
+The visual EER diagram follows standard academic **Chen notation** as required for institutional evaluation:
+- **Entities** are represented by **green bordered rectangles**.
+- **Attributes** are represented by **ellipses**, connected to their respective entities. Primary keys are explicitly **underlined**.
+- **Relationships** are represented by **green bordered diamonds** with cardinalities ($1 : 1$, $1 : N$) clearly labeled along connector edges.
+
+![SmartFlow Grid EER Diagram](figures/SmartFlow_Grid_EER_Diagram.png)
+
+### Structural Relationships & Multiplicities:
+1. **`Intersection` $\stackrel{1}{\longleftrightarrow}$ `has` $\stackrel{N}{\longleftrightarrow}$ `Lane`**: One intersection oversees multiple approach lanes ($1:N$).
+2. **`Lane` $\stackrel{1}{\longleftrightarrow}$ `governed_by` $\stackrel{1}{\longleftrightarrow}$ `Signal_Phase`**: Each directional lane is independently regulated by a dedicated signal phase ($1:1$).
+3. **`Lane` $\stackrel{1}{\longleftrightarrow}$ `records` $\stackrel{N}{\longleftrightarrow}$ `Sensor_Log`**: Each physical lane accumulates ongoing time-series vehicle count telemetry ($1:N$).
+4. **`Signal_Phase` $\stackrel{1}{\longleftrightarrow}$ `triggers` $\stackrel{N}{\longleftrightarrow}$ `Audit_Traffic_Log`**: State transitions generate immutable audit trail entries ($1:N$).
 
 ---
 
