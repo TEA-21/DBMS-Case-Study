@@ -1,0 +1,24 @@
+# Development & Planning files (keep local)
+PLAN.md
+plan.md
+PROGRESS.md
+progress.md
+*.pdf
+
+# Environment & Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs & temp
+*.log
+scratch/
+*.tmp
