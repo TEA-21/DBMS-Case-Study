@@ -3,13 +3,12 @@ SmartFlow Grid: Review 1 Evaluation Showcase GUI (Minimalist & High-Readability)
 Desktop Presentation Window for Professor / Evaluator Demonstration.
 
 Design Foundation:
-  - Clean Slate Dark Palette (#0f172a, #1e293b, #090d16, #334155).
-  - Modern typography with generous whitespace and high-contrast readability.
-  - Sleek integrated top header with low-profile evaluation badge.
-  - Clean structured execution stream without noisy ASCII banners.
-  - Refined master-detail interactive SQL explorer with alternating zebra tables.
-  - Interactive EER diagram viewer with zoom/fit controls and external launcher.
-  - Polished rubric requirement cards with mark pills and completion status badges.
+  - Neutral Obsidian & Charcoal Palette (#121214, #1c1c1f, #0c0c0e, #2e2e33) - Zero bluish tint.
+  - Warm amber and crisp emerald status accents for high-contrast, fatigue-free terminal reading.
+  - Sleek integrated top header with clean evaluation status badge.
+  - Clean structured execution stream without dense ASCII clutter.
+  - Refined master-detail interactive SQL explorer with alternating neutral zebra tables.
+  - Interactive EER diagram viewer with zoom/fit controls and external 300 DPI launcher.
 """
 
 import tkinter as tk
@@ -28,33 +27,32 @@ WORKSPACE_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 class SmartFlowShowcaseApp(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("SmartFlow Grid — Review 1 Academic Evaluation Suite (10/10 Marks)")
+        self.title("SmartFlow Grid — Review 1 Academic Evaluation Suite")
         self.geometry("1180x800")
         self.minsize(980, 680)
 
         # ---------------------------------------------------------------------
-        # Clean Slate Dark Palette
+        # True Neutral Charcoal & Obsidian Palette (Zero Bluish Hue)
         # ---------------------------------------------------------------------
-        self.BG_MAIN = "#0f172a"          # Slate 900 (Main window background)
-        self.BG_CARD = "#1e293b"          # Slate 800 (Card / Sidebar / Header)
-        self.BG_CARD_HOVER = "#273549"    # Slate 750 (Hover state)
-        self.BG_EDITOR = "#090d16"        # Slate 950 (Terminal / Code container)
-        self.BG_ZEBRA_EVEN = "#0c1322"    # Alternating row even
-        self.BG_ZEBRA_ODD = "#121b2f"     # Alternating row odd
-        self.BORDER_COLOR = "#334155"     # Slate 700 (Subtle borders)
-        self.BORDER_SUBTLE = "#1e293b"    # Subtle divider
-        self.FG_TEXT = "#f8fafc"          # Slate 50 (High contrast primary text)
-        self.FG_MUTED = "#94a3b8"         # Slate 400 (Secondary descriptive text)
-        self.FG_SUBTLE = "#64748b"        # Slate 500 (Captions / tags)
+        self.BG_MAIN = "#121214"          # Obsidian / Charcoal window background
+        self.BG_CARD = "#1c1c1f"          # Neutral card / header / sidebar
+        self.BG_CARD_HOVER = "#27272b"    # Neutral hover state
+        self.BG_EDITOR = "#0c0c0e"        # Pure deep black-charcoal terminal container
+        self.BG_ZEBRA_EVEN = "#0e0e10"    # Neutral even table row
+        self.BG_ZEBRA_ODD = "#161618"     # Neutral odd table row
+        self.BORDER_COLOR = "#2e2e33"     # Neutral graphite border
+        self.BORDER_SUBTLE = "#1c1c1f"    # Subtle divider
+        self.FG_TEXT = "#f4f4f5"          # Crisp neutral off-white text
+        self.FG_MUTED = "#a1a1aa"         # Neutral silver metadata
+        self.FG_SUBTLE = "#71717a"        # Neutral medium gray caption
 
-        self.ACCENT_INDIGO = "#6366f1"    # Indigo primary accent
-        self.ACCENT_SKY = "#38bdf8"       # Sky accent (Code / Headers)
-        self.ACCENT_EMERALD = "#10b981"   # Emerald success accent
-        self.ACCENT_EMERALD_BG = "#064e3b"# Soft dark emerald container
+        self.ACCENT_WARM = "#f59e0b"      # Warm amber for terminal step headers
+        self.ACCENT_CODE = "#fef08a"      # Soft warm cream for SQL statements
+        self.ACCENT_EMERALD = "#10b981"   # Crisp emerald green for success/pass
+        self.ACCENT_EMERALD_BG = "#064e3b"# Dark emerald container
         self.ACCENT_EMERALD_FG = "#6ee7b7"# Soft emerald text
-        self.ACCENT_ROSE = "#f43f5e"      # Rose error accent
-        self.ACCENT_ROSE_BG = "#4c0519"   # Soft dark rose container
-        self.ACCENT_AMBER = "#f59e0b"     # Amber warning accent
+        self.ACCENT_ROSE = "#f43f5e"      # Coral red for failure/errors
+        self.ACCENT_ROSE_BG = "#4c0519"   # Dark rose container
 
         self.configure(bg=self.BG_MAIN)
         self.setup_styles()
@@ -79,35 +77,35 @@ class SmartFlowShowcaseApp(tk.Tk):
         style = ttk.Style()
         style.theme_use("clam")
 
-        # Notebook tabs styling
+        # Notebook tabs styling (Neutral dark tabs)
         style.configure("TNotebook", background=self.BG_MAIN, borderwidth=0)
         style.configure("TNotebook.Tab", background=self.BG_CARD, foreground=self.FG_MUTED,
-                        padding=[20, 10], font=("Segoe UI", 10, "bold"), borderwidth=0)
+                        padding=[22, 10], font=("Segoe UI", 10, "bold"), borderwidth=0)
         style.map("TNotebook.Tab",
                   background=[("selected", self.BG_MAIN), ("active", self.BG_CARD_HOVER)],
                   foreground=[("selected", self.FG_TEXT), ("active", self.FG_TEXT)])
 
-        # Buttons
-        style.configure("Primary.TButton", background=self.ACCENT_INDIGO, foreground="#ffffff",
+        # Buttons (Clean Emerald & Neutral Graphite)
+        style.configure("Primary.TButton", background=self.ACCENT_EMERALD, foreground="#022c22",
                         font=("Segoe UI", 9, "bold"), borderwidth=0, padding=[14, 7])
         style.map("Primary.TButton",
-                  background=[("active", "#4f46e5"), ("disabled", "#475569")])
+                  background=[("active", "#059669"), ("disabled", "#3f3f46")])
 
         style.configure("Secondary.TButton", background=self.BG_CARD, foreground=self.FG_TEXT,
                         font=("Segoe UI", 9), borderwidth=1, relief="solid", padding=[12, 6])
         style.map("Secondary.TButton",
-                  background=[("active", self.BG_CARD_HOVER), ("pressed", "#0f172a")])
+                  background=[("active", self.BG_CARD_HOVER), ("pressed", "#121214")])
 
-        # Scrollbar
+        # Scrollbar (Neutral gray on dark)
         style.configure("TScrollbar", background=self.BG_CARD, troughcolor=self.BG_MAIN,
                         borderwidth=0, arrowsize=12)
 
-        # Treeview styling (Zebra Table)
+        # Treeview styling (Neutral Zebra Table)
         style.configure("Treeview", background=self.BG_EDITOR, foreground=self.FG_TEXT,
                         fieldbackground=self.BG_EDITOR, rowheight=28, font=("Consolas", 9), borderwidth=0)
         style.configure("Treeview.Heading", background=self.BG_CARD, foreground=self.FG_TEXT,
                         font=("Segoe UI", 9, "bold"), borderwidth=0, padding=6)
-        style.map("Treeview", background=[("selected", "#2563eb")])
+        style.map("Treeview", background=[("selected", "#3f3f46")])
 
     def setup_ui(self):
         # ---------------------------------------------------------------------
@@ -125,21 +123,21 @@ class SmartFlowShowcaseApp(tk.Tk):
                              font=("Segoe UI", 13, "bold"), bg=self.BG_CARD, fg=self.FG_TEXT)
         title_lbl.pack(side=tk.LEFT)
 
-        sub_lbl = tk.Label(left_hdr, text="  |  Review 1 Academic Evaluation Suite",
+        sub_lbl = tk.Label(left_hdr, text="  |  Review 1 Evaluation Showcase",
                            font=("Segoe UI", 10), bg=self.BG_CARD, fg=self.FG_MUTED)
         sub_lbl.pack(side=tk.LEFT)
 
         right_hdr = tk.Frame(header, bg=self.BG_CARD)
         right_hdr.pack(side=tk.RIGHT, padx=18)
 
-        badge_lbl = tk.Label(right_hdr, text="10 / 10 MARKS VALIDATED",
+        badge_lbl = tk.Label(right_hdr, text="LIVE EVALUATION ENGINE",
                              font=("Segoe UI", 9, "bold"), bg=self.ACCENT_EMERALD_BG,
                              fg=self.ACCENT_EMERALD_FG, highlightthickness=1,
                              highlightbackground="#059669", padx=12, pady=4)
         badge_lbl.pack(side=tk.RIGHT)
 
         # ---------------------------------------------------------------------
-        # 2. Main Tabbed Notebook
+        # 2. Main Tabbed Notebook (3 Clean Focused Tabs)
         # ---------------------------------------------------------------------
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill=tk.BOTH, expand=True, padx=16, pady=(12, 16))
@@ -147,20 +145,17 @@ class SmartFlowShowcaseApp(tk.Tk):
         self.tab_execution = tk.Frame(self.notebook, bg=self.BG_MAIN)
         self.tab_explorer = tk.Frame(self.notebook, bg=self.BG_MAIN)
         self.tab_eer = tk.Frame(self.notebook, bg=self.BG_MAIN)
-        self.tab_rubric = tk.Frame(self.notebook, bg=self.BG_MAIN)
 
         self.notebook.add(self.tab_execution, text=" Live Execution ")
         self.notebook.add(self.tab_explorer, text=" Interactive SQL Explorer ")
         self.notebook.add(self.tab_eer, text=" EER Diagram ")
-        self.notebook.add(self.tab_rubric, text=" Rubric Checklist ")
 
         self.setup_execution_tab()
         self.setup_explorer_tab()
         self.setup_eer_tab()
-        self.setup_rubric_tab()
 
     # -------------------------------------------------------------------------
-    # TAB 1: Live Full Execution (Clean Structured Stream)
+    # TAB 1: Live Full Execution (Neutral Minimalist Terminal)
     # -------------------------------------------------------------------------
     def setup_execution_tab(self):
         # Action Toolbar
@@ -183,7 +178,7 @@ class SmartFlowShowcaseApp(tk.Tk):
                               font=("Segoe UI", 9), bg=self.BG_MAIN, fg=self.FG_SUBTLE)
         status_lbl.pack(side=tk.RIGHT, padx=4)
 
-        # Output Container
+        # Terminal Container (Obsidian Black, zero blue)
         text_frame = tk.Frame(self.tab_execution, bg=self.BG_EDITOR,
                               highlightthickness=1, highlightbackground=self.BORDER_COLOR)
         text_frame.pack(fill=tk.BOTH, expand=True)
@@ -199,14 +194,14 @@ class SmartFlowShowcaseApp(tk.Tk):
         scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
         self.txt_output.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        # Text Formatting Tags
-        self.txt_output.tag_configure("title", font=("Segoe UI", 12, "bold"), foreground=self.FG_TEXT)
-        self.txt_output.tag_configure("step_hdr", font=("Segoe UI", 10, "bold"), foreground=self.ACCENT_SKY)
-        self.txt_output.tag_configure("sql_box", font=("Consolas", 9), foreground="#cbd5e1")
+        # Terminal Formatting Tags (Warm Amber, Emerald & Neutral Gray - NO BLUE)
+        self.txt_output.tag_configure("title", font=("Segoe UI", 11, "bold"), foreground=self.FG_TEXT)
+        self.txt_output.tag_configure("step_hdr", font=("Segoe UI", 10, "bold"), foreground=self.ACCENT_WARM)
+        self.txt_output.tag_configure("sql_box", font=("Consolas", 9), foreground="#d4d4d8")
         self.txt_output.tag_configure("pass", font=("Segoe UI", 10, "bold"), foreground=self.ACCENT_EMERALD)
         self.txt_output.tag_configure("fail", font=("Segoe UI", 10, "bold"), foreground=self.ACCENT_ROSE)
-        self.txt_output.tag_configure("table_hdr", font=("Consolas", 9, "bold"), foreground=self.ACCENT_SKY)
-        self.txt_output.tag_configure("table_div", font=("Consolas", 9), foreground=self.BORDER_COLOR)
+        self.txt_output.tag_configure("table_hdr", font=("Consolas", 9, "bold"), foreground="#fef08a")
+        self.txt_output.tag_configure("table_div", font=("Consolas", 9), foreground="#3f3f46")
         self.txt_output.tag_configure("table_data", font=("Consolas", 9), foreground=self.FG_TEXT)
         self.txt_output.tag_configure("summary", font=("Segoe UI", 11, "bold"), foreground=self.ACCENT_EMERALD)
         self.txt_output.tag_configure("dim", font=("Consolas", 9), foreground=self.FG_SUBTLE)
@@ -457,7 +452,7 @@ class SmartFlowShowcaseApp(tk.Tk):
             messagebox.showinfo("Saved", f"Log successfully exported to:\n{path}")
 
     # -------------------------------------------------------------------------
-    # TAB 2: Interactive SQL Explorer (Master-Detail with Zebra Tables)
+    # TAB 2: Interactive SQL Explorer (Master-Detail with Neutral Zebra Tables)
     # -------------------------------------------------------------------------
     def setup_explorer_tab(self):
         paned = tk.PanedWindow(self.tab_explorer, orient=tk.HORIZONTAL, bg=self.BG_MAIN, sashwidth=5)
@@ -526,7 +521,8 @@ class SmartFlowShowcaseApp(tk.Tk):
                                  highlightthickness=1, highlightbackground=self.BORDER_COLOR)
         sql_box_frame.pack(fill=tk.X, pady=(0, 12))
 
-        self.exp_sql_box = tk.Text(sql_box_frame, height=7, bg=self.BG_EDITOR, fg=self.ACCENT_SKY,
+        # Warm amber/cream SQL code display on obsidian background
+        self.exp_sql_box = tk.Text(sql_box_frame, height=7, bg=self.BG_EDITOR, fg=self.ACCENT_CODE,
                                    font=("Consolas", 10), padx=12, pady=10, borderwidth=0, wrap=tk.NONE)
         self.exp_sql_box.pack(fill=tk.X)
 
@@ -555,17 +551,17 @@ class SmartFlowShowcaseApp(tk.Tk):
         tree_scroll_x.pack(side=tk.BOTTOM, fill=tk.X)
         self.tree.pack(fill=tk.BOTH, expand=True)
 
-        # Configure zebra stripes
+        # Configure neutral zebra stripes
         self.tree.tag_configure("even", background=self.BG_ZEBRA_EVEN)
         self.tree.tag_configure("odd", background=self.BG_ZEBRA_ODD)
         self.tree.tag_configure("verified", foreground=self.ACCENT_EMERALD)
         self.tree.tag_configure("rejected", foreground=self.ACCENT_ROSE)
 
     def on_query_clicked(self, cmd, title):
-        # Update active button highlight
+        # Update active button highlight with neutral graphite
         for btn, b_title in self.query_buttons:
             if b_title == title:
-                btn.configure(bg="#334155", fg="#ffffff")
+                btn.configure(bg="#3f3f46", fg="#ffffff")
             else:
                 btn.configure(bg=self.BG_CARD, fg=self.FG_TEXT)
         cmd()
@@ -803,92 +799,6 @@ SELECT 'Sensor_Log' AS Entity, COUNT(*) FROM Sensor_Log;"""
                 subprocess.run(["xdg-open", self.eer_path])
         else:
             messagebox.showerror("Error", "EER Diagram file not found.")
-
-    # -------------------------------------------------------------------------
-    # TAB 4: Rubric Checklist (Clean Structured Cards)
-    # -------------------------------------------------------------------------
-    def setup_rubric_tab(self):
-        container = tk.Frame(self.tab_rubric, bg=self.BG_MAIN, padx=16, pady=12)
-        container.pack(fill=tk.BOTH, expand=True)
-
-        hdr_frame = tk.Frame(container, bg=self.BG_MAIN)
-        hdr_frame.pack(fill=tk.X, pady=(0, 14))
-
-        title_lbl = tk.Label(hdr_frame, text="Academic Evaluation Rubric — Review 1 Verification (10 Marks)",
-                             font=("Segoe UI", 12, "bold"), bg=self.BG_MAIN, fg=self.FG_TEXT)
-        title_lbl.pack(anchor="w")
-
-        sub_lbl = tk.Label(hdr_frame, text="All rubric criteria mapped directly to verified database implementation deliverables.",
-                           font=("Segoe UI", 9), bg=self.BG_MAIN, fg=self.FG_MUTED)
-        sub_lbl.pack(anchor="w", pady=(2, 0))
-
-        # Requirements List
-        requirements = [
-            ("1. Problem & Domain Formulation", "2 Marks",
-             "Formulated smart city traffic topology addressing static timer inefficiencies, IoT load sensing, and priority routing.",
-             "100% COMPLETE"),
-            ("2. Entities, Attributes & Chen EER Model", "2 Marks",
-             "Academic Chen EER diagram: 5 relational entities, relationship diamonds, 1:N and 1:1 cardinalities, and primary key underlines.",
-             "100% COMPLETE"),
-            ("3. DDL Implementation & Integrity Constraints", "2 Marks",
-             "Relational schemas enforcing PK, FK cascades, CHECK constraints (valid signal states, positive counts), and column defaults.",
-             "100% COMPLETE"),
-            ("4. DML Operations & Telemetry Seeding", "2 Marks",
-             "Seeded 5 intersections, 20 directional lanes, 20 dedicated signal phases, and 120 temporal sensor telemetry rows.",
-             "100% COMPLETE"),
-            ("5. Operators, Group Functions & Date Extraction", "2 Marks",
-             "Analytical queries computing SUM, AVG, MIN, MAX aggregations, HAVING volume filters, and hourly/shift temporal grouping.",
-             "100% COMPLETE"),
-        ]
-
-        cards_frame = tk.Frame(container, bg=self.BG_MAIN)
-        cards_frame.pack(fill=tk.BOTH, expand=True)
-
-        for req_title, marks, details, status in requirements:
-            card = tk.Frame(cards_frame, bg=self.BG_CARD, highlightthickness=1,
-                            highlightbackground=self.BORDER_COLOR, padx=14, pady=10)
-            card.pack(fill=tk.X, pady=4)
-
-            # Left side
-            left_side = tk.Frame(card, bg=self.BG_CARD)
-            left_side.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-
-            title_row = tk.Frame(left_side, bg=self.BG_CARD)
-            title_row.pack(fill=tk.X)
-
-            lbl_req = tk.Label(title_row, text=req_title, font=("Segoe UI", 10, "bold"),
-                               bg=self.BG_CARD, fg=self.FG_TEXT)
-            lbl_req.pack(side=tk.LEFT)
-
-            mark_pill = tk.Label(title_row, text=f" {marks} ", font=("Segoe UI", 8, "bold"),
-                                 bg="#312e81", fg="#c7d2fe", padx=6, pady=1)
-            mark_pill.pack(side=tk.LEFT, padx=10)
-
-            lbl_desc = tk.Label(left_side, text=details, font=("Segoe UI", 9),
-                                bg=self.BG_CARD, fg=self.FG_MUTED, anchor="w", justify=tk.LEFT)
-            lbl_desc.pack(fill=tk.X, pady=(3, 0))
-
-            # Right side status badge
-            right_side = tk.Frame(card, bg=self.BG_CARD)
-            right_side.pack(side=tk.RIGHT, padx=4)
-
-            badge = tk.Label(right_side, text=f" ✔ {status} ", font=("Segoe UI", 9, "bold"),
-                             bg=self.ACCENT_EMERALD_BG, fg=self.ACCENT_EMERALD_FG,
-                             highlightthickness=1, highlightbackground="#059669", padx=10, pady=4)
-            badge.pack()
-
-        # Bottom Total Banner
-        total_card = tk.Frame(container, bg=self.ACCENT_EMERALD_BG, highlightthickness=1,
-                              highlightbackground="#059669", padx=16, pady=12)
-        total_card.pack(fill=tk.X, pady=(12, 0))
-
-        tot_title = tk.Label(total_card, text="TOTAL SCORE CLAIMED: 10 / 10 MARKS",
-                             font=("Segoe UI", 11, "bold"), bg=self.ACCENT_EMERALD_BG, fg="#ffffff")
-        tot_title.pack(side=tk.LEFT)
-
-        tot_sub = tk.Label(total_card, text="All 5 criteria fully validated via automated test gates",
-                           font=("Segoe UI", 9), bg=self.ACCENT_EMERALD_BG, fg=self.ACCENT_EMERALD_FG)
-        tot_sub.pack(side=tk.RIGHT)
 
 
 if __name__ == "__main__":
