@@ -8,7 +8,7 @@ Design Foundation:
   - Sleek integrated top header with clean evaluation status badge.
   - Clean structured execution stream without dense ASCII clutter.
   - Refined master-detail interactive SQL explorer with alternating neutral zebra tables.
-  - Interactive EER diagram viewer with zoom/fit controls and external 300 DPI launcher.
+  - Interactive ER diagram viewer with zoom/fit controls and external 300 DPI launcher.
 """
 
 import tkinter as tk
@@ -66,7 +66,7 @@ class SmartFlowShowcaseApp(tk.Tk):
         # Active explorer selection tracking
         self.active_query_btn = None
 
-        # EER Image zoom tracking
+        # ER Image zoom tracking
         self.eer_orig_img = None
         self.eer_zoom_factor = 1.0
 
@@ -148,7 +148,7 @@ class SmartFlowShowcaseApp(tk.Tk):
 
         self.notebook.add(self.tab_execution, text=" Live Execution ")
         self.notebook.add(self.tab_explorer, text=" Interactive SQL Explorer ")
-        self.notebook.add(self.tab_eer, text=" EER Diagram ")
+        self.notebook.add(self.tab_eer, text=" ER Diagram ")
 
         self.setup_execution_tab()
         self.setup_explorer_tab()
@@ -705,7 +705,7 @@ SELECT 'Sensor_Log' AS Entity, COUNT(*) FROM Sensor_Log;"""
         self.display_query_in_explorer(sql, headers, self.cur.fetchall())
 
     # -------------------------------------------------------------------------
-    # TAB 3: Academic EER Diagram Viewer (Interactive Zoom & External Launch)
+    # TAB 3: Academic ER Diagram Viewer (Interactive Zoom & External Launch)
     # -------------------------------------------------------------------------
     def setup_eer_tab(self):
         # Top toolbar
@@ -798,7 +798,7 @@ SELECT 'Sensor_Log' AS Entity, COUNT(*) FROM Sensor_Log;"""
             else:
                 subprocess.run(["xdg-open", self.eer_path])
         else:
-            messagebox.showerror("Error", "EER Diagram file not found.")
+            messagebox.showerror("Error", "ER Diagram file not found.")
 
 
 if __name__ == "__main__":

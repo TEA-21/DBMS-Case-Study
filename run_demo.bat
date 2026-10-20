@@ -14,7 +14,7 @@ echo ===========================================================================
 echo.
 echo   Select how you would like to showcase the project to your professor:
 echo.
-echo   [1] GUI Showcase Window (Recommended - Visual Tables, SQL Explorer, EER Diagram)
+echo   [1] GUI Showcase Window (Recommended - Visual Tables, SQL Explorer, ER Diagram)
 echo   [2] Terminal Showcase Window (Command-line execution trace with live pause)
 echo.
 set /p choice="Enter choice [1 or 2, default is 1]: "
