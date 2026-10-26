@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartFlow Grid — Municipal Traffic Operations Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/index-CTm6kZfu.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-Dl4RzNrs.css">
+</head>
+<body>
+  <!-- Top Bar (48px) -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <span class="system-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="2" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+        </svg>
+      </span>
+      <h1 class="system-title">SmartFlow Grid</h1>
+      <span class="system-divider">/</span>
+      <span class="system-sub">Municipal Traffic Operations</span>
+    </div>
+
+    <div class="top-bar-center">
+      <div class="status-indicator-badge">
+        <span class="status-pulse-dot"></span>
+        <span class="status-badge-title">GRID OPTIMAL</span>
+        <span class="status-badge-divider">•</span>
+        <span class="status-badge-sub">ORACLE SYNC</span>
+      </div>
+      <div class="clock-display">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span id="live-municipal-clock" class="mono">--:--:--</span>
+      </div>
+    </div>
+
+    <div class="top-bar-right">
+      <div class="control-group">
+        <button id="btn-toggle-sim" class="btn btn-primary" title="Toggle autonomous signal cycling">
+          <span id="icon-sim-state" class="btn-symbol">❚❚</span>
+          <span id="lbl-sim-state">PAUSE</span>
+        </button>
+        <button id="btn-advance-cycle" class="btn btn-secondary" title="Manually step signal phase forward by one tick">
+          <span class="btn-symbol">+1</span>
+          <span>TICK</span>
+        </button>
+      </div>
+
+      <div class="control-group speed-group">
+        <span class="control-label">SPEED:</span>
+        <button class="btn btn-chip active" data-speed="1">1x</button>
+        <button class="btn btn-chip" data-speed="2">2x</button>
+        <button class="btn btn-chip" data-speed="5">5x</button>
+      </div>
+
+      <button id="btn-toggle-drawer" class="btn btn-accent" title="Open Relational Database Execution Console">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M3 9h18"/>
+          <path d="M9 21V9"/>
+        </svg>
+        <span>SQL CONSOLE</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main 2-Column Split Workspace (100vh - 48px) -->
+  <main class="console-workspace">
+    <!-- Left Stage: 70% Width (Node Tabs + 4-Way Crossroad Visualizer) -->
+    <section class="stage-panel">
+      <!-- Horizontal Node Selector Tabs (5 Intersections) -->
+      <nav class="node-tabs-bar" id="node-tabs-bar">
+        <!-- Rendered dynamically by JS -->
+      </nav>
+
+      <!-- 4-Way Crossroad Visualizer Stage -->
+      <div class="crossroad-stage-container" id="crossroad-stage-container">
+        <!-- 60 FPS HiDPI 2D Traffic Simulation Canvas -->
+        <canvas id="traffic-canvas" class="traffic-canvas"></canvas>
+
+        <!-- 4 Diagonal Corner HUD Slots (Tucked cleanly away from road channels) -->
+        <div class="hud-quadrant quadrant-nw">
+          <div id="approach-north" class="approach-card">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="hud-quadrant quadrant-ne">
+          <div id="approach-east" class="approach-card">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="hud-quadrant quadrant-sw">
+          <div id="approach-west" class="approach-card">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="hud-quadrant quadrant-se">
+          <div id="approach-south" class="approach-card">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Hidden anchor for JS compatibility -->
+        <span id="center-node-id" class="hidden"></span>
+      </div>
+    </section>
+
+    <!-- Right Sidebar: 30% Width (Emergency Action + Live DB Views) -->
+    <aside class="sidebar-panel">
+      <!-- Card 1: Emergency Preemption Procedure -->
+      <div class="side-card preemption-card">
+        <div class="side-card-header">
+          <div class="side-card-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+              <polygon points="12 2 2 22 22 22"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <h2>EMERGENCY PREEMPTION</h2>
+          </div>
+          <span class="routine-tag mono">proc_Emergency_Override</span>
+        </div>
+
+        <!-- Global Active Emergency Indicator Banner -->
+        <div id="emergency-active-banner" class="emergency-active-banner hidden">
+          <div class="banner-text">
+            <span class="active-dot"></span>
+            <span id="emergency-active-text" class="mono">OVERRIDE ACTIVE</span>
+          </div>
+        </div>
+
+        <div class="preemption-body">
+          <div class="form-group">
+            <label for="override-target-lane" class="form-label">TARGET PRIORITY CORRIDOR:</label>
+            <select id="override-target-lane" class="form-select">
+              <!-- Populated dynamically based on selected node -->
+            </select>
+          </div>
+
+          <div class="button-stack">
+            <button id="btn-engage-emergency" class="btn btn-danger btn-full">
+              <span>DISPATCH AMBULANCE OVERRIDE</span>
+            </button>
+            <button id="btn-clear-emergency" class="btn btn-secondary btn-full hidden">
+              <span class="btn-symbol">↺</span>
+              <span>CLEAR OVERRIDE & RESUME NORMAL CYCLE</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Live Database Views & WMA Summary -->
+      <div class="side-card metrics-card">
+        <div class="side-card-header">
+          <div class="side-card-tabs">
+            <button class="metrics-tab active" data-tab="tab-dashboard-view">
+              <span>vw_Dashboard_Live</span>
+            </button>
+            <button class="metrics-tab" data-tab="tab-wma-view">
+              <span>func_Congestion_Level</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="metrics-body">
+          <!-- Tab 1: Live Green Corridors from vw_Dashboard_Live -->
+          <div id="tab-dashboard-view" class="metrics-pane active">
+            <div class="table-container">
+              <table class="compact-table">
+                <thead>
+                  <tr>
+                    <th>NODE</th>
+                    <th>LANE</th>
+                    <th>QUEUE</th>
+                    <th>SAT%</th>
+                    <th>FLOW</th>
+                  </tr>
+                </thead>
+                <tbody id="view-dashboard-body">
+                  <!-- Populated from /api/dashboard-live -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Tab 2: Top 4 Congested Lanes from func_Calculate_Congestion_Level -->
+          <div id="tab-wma-view" class="metrics-pane">
+            <div class="wma-list" id="congestion-list">
+              <!-- Top congested lanes populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Slide-Out SQL & PL/SQL Database Console Drawer -->
+  <aside id="db-drawer" class="db-drawer closed">
+    <div class="drawer-header">
+      <div class="drawer-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+          <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+        </svg>
+        <h3>RELATIONAL DATABASE EXECUTION CONSOLE</h3>
+      </div>
+      <button id="btn-close-drawer" class="btn-close" aria-label="Close drawer">✕</button>
+    </div>
+
+    <div class="drawer-tabs">
+      <button class="drawer-tab active" data-tab="tab-trace">LIVE EXECUTION TRACE</button>
+      <button class="drawer-tab" data-tab="tab-audit">SHADOW AUDIT TRAIL</button>
+      <button class="drawer-tab" data-tab="tab-oracle">ORACLE PL/SQL SOURCE</button>
+      <button class="drawer-tab" data-tab="tab-postgres">POSTGRESQL PL/pgSQL</button>
+    </div>
+
+    <div class="drawer-content">
+      <!-- Tab 1: Live Execution Trace -->
+      <div id="tab-trace" class="tab-pane active">
+        <div class="pane-meta">Real-time database transaction logs, physical telemetry INSERTs, and trigger firings:</div>
+        <div id="live-trace-stream" class="code-terminal"></div>
+      </div>
+
+      <!-- Tab 2: Shadow Audit Trail -->
+      <div id="tab-audit" class="tab-pane">
+        <div class="pane-meta">Autonomous AFTER UPDATE trigger records populated in <code>Audit_Traffic_Log</code>:</div>
+        <div class="audit-table-wrapper">
+          <table class="compact-table">
+            <thead>
+              <tr>
+                <th>AUDIT ID</th>
+                <th>PHASE ID</th>
+                <th>PREV STATE</th>
+                <th>NEW STATE</th>
+                <th>TIMESTAMP</th>
+                <th>SOURCE</th>
+              </tr>
+            </thead>
+            <tbody id="audit-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tab 3: Oracle PL/SQL Source -->
+      <div id="tab-oracle" class="tab-pane">
+        <div class="code-selector">
+          <button class="code-pill active" data-code="oracle_emergency">proc_Emergency_Override</button>
+          <button class="code-pill" data-code="oracle_wma">func_Calculate_Congestion_Level</button>
+          <button class="code-pill" data-code="oracle_cursor">proc_Check_Zone_Diversion</button>
+          <button class="code-pill" data-code="oracle_trigger">trg_Signal_Phase_Audit</button>
+          <button class="code-pill" data-code="oracle_view">vw_Dashboard_Live</button>
+        </div>
+        <pre><code id="oracle-code-display" class="code-box">Loading Oracle PL/SQL source...</code></pre>
+      </div>
+
+      <!-- Tab 4: PostgreSQL PL/pgSQL Source -->
+      <div id="tab-postgres" class="tab-pane">
+        <div class="code-selector">
+          <button class="code-pill active" data-code="postgres_emergency">proc_Emergency_Override</button>
+          <button class="code-pill" data-code="postgres_trigger">trg_Signal_Phase_Audit</button>
+        </div>
+        <pre><code id="postgres-code-display" class="code-box">Loading PostgreSQL source...</code></pre>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Overlay backdrop for drawer -->
+  <div id="drawer-backdrop" class="drawer-backdrop hidden"></div>
+
+</body>
+</html>
