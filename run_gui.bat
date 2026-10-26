@@ -1,3 +1,4 @@
 @echo off
-REM Directly launches the GUI evaluation showcase window
-start "" python "%~dp0scripts\review_1_showcase.py"
+REM Directly launches the Web-based Municipal Operations Console
+cd /d "%~dp0web"
+npm run dev
