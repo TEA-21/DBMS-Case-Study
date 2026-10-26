@@ -74,7 +74,7 @@ School of Computer Science and Engineering}
 \begin{abstract}
 Urban traffic congestion causes serious delays, fuel waste, and increased air pollution. Traditional traffic lights use fixed timer schedules. These timers cannot adjust when traffic conditions change. As a result, empty roads get green lights while busy roads face long vehicle lines. In addition, emergency vehicles get blocked in traffic. 
 
-This project presents \textbf{SmartFlow Grid}, an intelligent traffic management system built on a relational database. The system models road junctions, directional lanes, traffic lights, and live IoT sensor readings. It runs procedural database routines (PL/SQL and PL/pgSQL) to calculate congestion and adjust signal lights in real time. When an emergency vehicle approaches, the database locks conflicting lanes to red and gives an immediate green wave. The database also records every signal change in an automatic audit table. 
+This project presents \textbf{SmartFlow Grid}, an intelligent traffic management system built on a relational database. The system models road junctions, directional lanes, traffic lights, and live IoT sensor readings. It runs procedural database routines (Oracle PL/SQL) to calculate congestion and adjust signal lights in real time. When an emergency vehicle approaches, the database locks conflicting lanes to red and gives an immediate green wave. The database also records every signal change in an automatic audit table. 
 
 This report provides the full design and implementation of the system. It covers the problem definition, system requirements, entity-relationship model, mathematical normalization proofs (1NF to BCNF), SQL and PL/SQL code, experimental results, and future enhancements. All explanations follow ASD-STE100 principles for clear and simple technical communication.
 \end{abstract}
@@ -106,7 +106,7 @@ The SmartFlow Grid replaces static timers with an intelligent database system:
 \begin{itemize}
     \item \textbf{Directional Lane Modeling:} The database treats every lane at an intersection as a distinct entity with its own dedicated traffic signal.
     \item \textbf{Real-Time Telemetry Storage:} The database ingests sensor count streams with precise timestamps.
-    \item \textbf{In-Database Procedural Logic:} Instead of moving data to an external application, stored procedures and functions run directly inside the database engine (Oracle PL/SQL and PostgreSQL PL/pgSQL). This eliminates network delays and ensures instant reaction times.
+    \item \textbf{In-Database Procedural Logic:} Instead of moving data to an external application, stored procedures and functions run directly inside the database engine (Oracle PL/SQL). This eliminates network delays and ensures instant reaction times.
     \item \textbf{Automated Emergency Override:} A dedicated procedure locks conflicting signals to red and opens a clear green path for emergency responders.
     \item \textbf{Automatic Audit Tracking:} Database triggers capture all signal transitions into an immutable audit table without requiring external code.
 \end{itemize}
@@ -133,14 +133,14 @@ The SmartFlow Grid system satisfies the following functional requirements:
     \item \textbf{Performance:} Database stored procedures and queries must execute in less than 5 milliseconds to support fast signal timing.
     \item \textbf{Data Integrity (ACID):} Signal state changes must execute inside atomic transactions. The database must never display conflicting green lights at the same junction.
     \item \textbf{Reliability:} Check constraints and foreign keys must reject invalid data, such as negative vehicle counts or non-existent intersection IDs.
-    \item \textbf{Portability:} The system must provide complete, verified implementations for both Oracle Database and PostgreSQL.
+    \item \textbf{Production Standard:} The system must provide an enterprise-grade, verified implementation on Oracle Database using PL/SQL.
 \end{itemize}
 
 \subsection{System Analysis \& Stakeholders}
 The system connects four key actors:
 \begin{enumerate}
     \item \textbf{IoT Roadway Sensors:} Hardware sensors detect passing cars and insert vehicle count rows into the database.
-    \item \textbf{Database Engine:} Oracle or PostgreSQL executes constraints, views, stored procedures, functions, and triggers.
+    \item \textbf{Database Engine:} Oracle Database executes constraints, views, stored procedures, functions, and triggers.
     \item \textbf{Traffic Signal Controllers:} Physical traffic signal hardware reads database updates and changes the physical lamp colors.
     \item \textbf{Emergency Responders \& Operators:} First responders trigger priority routes, and municipal operators monitor live traffic on an operational dashboard.
 \end{enumerate}
@@ -175,6 +175,16 @@ The conceptual schema contains five strong entities:
     \label{fig:eer}
 \end{figure}
 
+\subsection{Relational Logical Schema Diagram}
+Figure~\ref{fig:logical_schema} presents the logical schema diagram for the system. The diagram highlights primary keys (\textbf{PK}) and foreign keys (\textbf{FK}) in bold within each entity's top header compartment. Non-key attributes occupy the lower compartment. Clean orthogonal lines map the structural linkages and referential integrity constraints connecting all five tables.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{logical_schema_diagram.png}
+    \caption{Relational Logical Schema Diagram with Bold Header Keys (PK/FK) and Structural Linkages.}
+    \label{fig:logical_schema}
+\end{figure}
+
 \subsection{Relational Data Dictionary}
 
 \begin{table}[H]
@@ -182,19 +192,19 @@ The conceptual schema contains five strong entities:
 \caption{Data Dictionary: \texttt{Intersection} and \texttt{Lane} Tables}
 \label{tab:dict1}
 \footnotesize
-\begin{tabularx}{\textwidth}{llllX}
+\begin{tabularx}{\textwidth}{lllX}
 \toprule
-\textbf{Attribute} & \textbf{Oracle Type} & \textbf{Postgres Type} & \textbf{Constraint} & \textbf{Description} \\
+\textbf{Attribute} & \textbf{Data Type} & \textbf{Constraint} & \textbf{Description} \\
 \midrule
-\texttt{Intersection\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{PK} & Unique identifier for the junction. \\
-\texttt{Location\_Name} & \texttt{VARCHAR2(100)} & \texttt{VARCHAR(100)} & \texttt{NOT NULL, UQ} & Physical street intersection name. \\
-\texttt{Grid\_Zone} & \texttt{VARCHAR2(50)} & \texttt{VARCHAR(50)} & \texttt{NOT NULL} & City surveillance sector (e.g. Zone A). \\
+\texttt{Intersection\_ID} & \texttt{NUMBER(10)} & \texttt{PRIMARY KEY} & Unique identifier for the junction. \\
+\texttt{Location\_Name}   & \texttt{VARCHAR2(100)} & \texttt{NOT NULL, UNIQUE} & Physical street intersection name. \\
+\texttt{Grid\_Zone}       & \texttt{VARCHAR2(50)} & \texttt{NOT NULL} & City surveillance sector (e.g. Zone A). \\
 \midrule
-\texttt{Lane\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{PK} & Unique identifier for the lane. \\
-\texttt{Intersection\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{NOT NULL, FK} & References \texttt{Intersection(Intersection\_ID)}. \\
-\texttt{Direction} & \texttt{VARCHAR2(20)} & \texttt{VARCHAR(20)} & \texttt{CHECK} & Compass direction (NORTH, SOUTH, etc.). \\
-\texttt{Capacity\_Limit} & \texttt{NUMBER(6)} & \texttt{INTEGER} & \texttt{CHECK > 0} & Maximum car capacity for the lane. \\
-\texttt{Is\_Emergency} & \texttt{NUMBER(1)} & \texttt{SMALLINT} & \texttt{CHECK (0,1)} & Flag: 1 for emergency route, 0 for standard. \\
+\texttt{Lane\_ID}         & \texttt{NUMBER(10)} & \texttt{PRIMARY KEY} & Unique identifier for the lane. \\
+\texttt{Intersection\_ID} & \texttt{NUMBER(10)} & \texttt{NOT NULL, FK} & References \texttt{Intersection(Intersection\_ID)}. \\
+\texttt{Direction}        & \texttt{VARCHAR2(20)} & \texttt{CHECK} & Compass direction (NORTHBOUND, SOUTHBOUND, etc.). \\
+\texttt{Capacity\_Limit}  & \texttt{NUMBER(6)} & \texttt{CHECK > 0} & Maximum car capacity for the lane. \\
+\texttt{Is\_Emergency\_Corridor} & \texttt{NUMBER(1)} & \texttt{CHECK (0,1)} & Flag: 1 for emergency route, 0 for standard. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -204,28 +214,28 @@ The conceptual schema contains five strong entities:
 \caption{Data Dictionary: \texttt{Signal\_Phase}, \texttt{Sensor\_Log}, and \texttt{Audit\_Traffic\_Log} Tables}
 \label{tab:dict2}
 \footnotesize
-\begin{tabularx}{\textwidth}{llllX}
+\begin{tabularx}{\textwidth}{lllX}
 \toprule
-\textbf{Attribute} & \textbf{Oracle Type} & \textbf{Postgres Type} & \textbf{Constraint} & \textbf{Description} \\
+\textbf{Attribute} & \textbf{Data Type} & \textbf{Constraint} & \textbf{Description} \\
 \midrule
-\texttt{Phase\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{PK} & Unique signal head identifier. \\
-\texttt{Lane\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{NOT NULL, UQ, FK} & Governed lane (1:1 relationship). \\
-\texttt{Intersection\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{NOT NULL, FK} & Parent intersection identifier. \\
-\texttt{Current\_State} & \texttt{VARCHAR2(10)} & \texttt{VARCHAR(10)} & \texttt{CHECK IN (...)} & Active signal color: RED, YELLOW, GREEN. \\
-\texttt{Duration\_Seconds}& \texttt{NUMBER(5)} & \texttt{INTEGER} & \texttt{CHECK > 0} & Hold time for current light state. \\
-\texttt{Last\_Updated} & \texttt{TIMESTAMP} & \texttt{TIMESTAMP} & \texttt{DEFAULT NOW} & Timestamp of last state mutation. \\
+\texttt{Phase\_ID}        & \texttt{NUMBER(10)} & \texttt{PRIMARY KEY} & Unique signal head identifier. \\
+\texttt{Lane\_ID}         & \texttt{NUMBER(10)} & \texttt{NOT NULL, UQ, FK} & Governed lane (1:1 relationship). \\
+\texttt{Intersection\_ID} & \texttt{NUMBER(10)} & \texttt{NOT NULL, FK} & Parent intersection identifier. \\
+\texttt{Current\_State}   & \texttt{VARCHAR2(10)} & \texttt{CHECK IN (...)} & Active signal color: RED, YELLOW, GREEN. \\
+\texttt{Duration\_Seconds}& \texttt{NUMBER(5)} & \texttt{CHECK > 0} & Hold time for current light state. \\
+\texttt{Last\_Updated}    & \texttt{TIMESTAMP} & \texttt{DEFAULT SYSTIMESTAMP} & Timestamp of last state mutation. \\
 \midrule
-\texttt{Log\_ID} & \texttt{NUMBER(12)} & \texttt{BIGINT} & \texttt{PK} & Unique telemetry reading identifier. \\
-\texttt{Lane\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{NOT NULL, FK} & Monitored lane identifier. \\
-\texttt{Car\_Count} & \texttt{NUMBER(6)} & \texttt{INTEGER} & \texttt{CHECK >= 0} & Observed vehicle count. \\
-\texttt{Recorded\_At} & \texttt{TIMESTAMP} & \texttt{TIMESTAMP} & \texttt{DEFAULT NOW} & Time the sensor logged the count. \\
+\texttt{Log\_ID}          & \texttt{NUMBER(12)} & \texttt{PRIMARY KEY} & Unique telemetry reading identifier. \\
+\texttt{Lane\_ID}         & \texttt{NUMBER(10)} & \texttt{NOT NULL, FK} & Monitored lane identifier. \\
+\texttt{Car\_Count}       & \texttt{NUMBER(6)} & \texttt{CHECK >= 0} & Observed vehicle count. \\
+\texttt{Recorded\_At}     & \texttt{TIMESTAMP} & \texttt{DEFAULT SYSTIMESTAMP} & Time the sensor logged the count. \\
 \midrule
-\texttt{Audit\_ID} & \texttt{NUMBER(12)} & \texttt{BIGSERIAL} & \texttt{PK} & Sequential audit log record ID. \\
-\texttt{Phase\_ID} & \texttt{NUMBER(10)} & \texttt{INTEGER} & \texttt{NOT NULL, FK} & Signal phase that changed. \\
-\texttt{Old\_State} & \texttt{VARCHAR2(10)} & \texttt{VARCHAR(10)} & \texttt{NULLABLE} & Signal color before the change. \\
-\texttt{New\_State} & \texttt{VARCHAR2(10)} & \texttt{VARCHAR(10)} & \texttt{NOT NULL} & Signal color after the change. \\
-\texttt{Changed\_At} & \texttt{TIMESTAMP} & \texttt{TIMESTAMP} & \texttt{DEFAULT NOW} & System time when the change occurred. \\
-\texttt{Trigger\_Source} & \texttt{VARCHAR2(50)} & \texttt{VARCHAR(50)} & \texttt{DEFAULT} & Name of the trigger that logged the event. \\
+\texttt{Audit\_ID}        & \texttt{NUMBER(12)} & \texttt{PRIMARY KEY} & Sequential audit log record ID. \\
+\texttt{Phase\_ID}        & \texttt{NUMBER(10)} & \texttt{NOT NULL, FK} & Signal phase that changed. \\
+\texttt{Old\_State}       & \texttt{VARCHAR2(10)} & \texttt{NULLABLE} & Signal color before the change. \\
+\texttt{New\_State}       & \texttt{VARCHAR2(10)} & \texttt{NOT NULL} & Signal color after the change. \\
+\texttt{Changed\_At}      & \texttt{TIMESTAMP} & \texttt{DEFAULT SYSTIMESTAMP} & System time when the change occurred. \\
+\texttt{Trigger\_Source}  & \texttt{VARCHAR2(50)} & \texttt{DEFAULT} & Name of the trigger that logged the event. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -677,20 +687,20 @@ Figure~\ref{fig:screen_audit} displays the records inserted automatically into \
 % =============================================================================
 
 \subsection{Conclusion}
-The SmartFlow Grid project proves that relational database systems can effectively manage live urban traffic infrastructure. By combining Boyce-Codd Normal Form (BCNF) relational design with server-side procedural logic (PL/SQL and PL/pgSQL), the system achieves fast, reliable, and automated signal control. 
+The SmartFlow Grid project proves that relational database systems can effectively manage live urban traffic infrastructure. By combining Boyce-Codd Normal Form (BCNF) relational design with server-side procedural logic (Oracle PL/SQL), the system achieves fast, reliable, and automated signal control. 
 
 The implementation delivers key benefits:
 \begin{enumerate}
     \item It replaces inefficient fixed timers with real-time sensor-driven signal adjustments.
     \item It provides an automated, fail-safe emergency corridor override for first responders.
     \item It maintains an immutable audit log of all signal state transitions.
-    \item It completely satisfies the 10-gate academic verification suite across both Oracle and PostgreSQL database engines.
+    \item It completely satisfies the 10-gate academic verification suite on Oracle Database.
 \end{enumerate}
 
 \subsection{Future Enhancements}
 Future development can expand the system in three areas:
 \begin{enumerate}
-    \item \textbf{Edge Computer Vision Integration:} Connect gantry cameras directly to PostgreSQL using \texttt{pgvector} to store vehicle embeddings and identify vehicle classes (buses, trucks, cars).
+    \item \textbf{Edge Computer Vision Integration:} Connect gantry cameras directly to Oracle Database using AI Vector Search to store vehicle embeddings and identify vehicle classes (buses, trucks, cars).
     \item \textbf{Multi-Intersection Green Waves:} Expand the stored procedures to coordinate timing across consecutive intersections along major traffic corridors.
     \item \textbf{Machine Learning Traffic Prediction:} Integrate Python-based time-series forecasting (e.g. ARIMA or LSTM) to predict congestion 30 minutes in advance and adjust signal plans proactively.
 \end{enumerate}
@@ -700,7 +710,7 @@ Future development can expand the system in three areas:
     \item Elmasri, R., \& Navathe, S. B. (2015). \textit{Fundamentals of Database Systems} (7th ed.). Pearson.
     \item Silberschatz, A., Korth, H. F., \& Sudarshan, S. (2019). \textit{Database System Concepts} (7th ed.). McGraw-Hill.
     \item Oracle Corporation. (2024). \textit{Oracle Database PL/SQL Language Reference, 19c / 21c}. Oracle Documentation.
-    \item PostgreSQL Global Development Group. (2024). \textit{PostgreSQL 16 Documentation: PL/pgSQL - SQL Procedural Language}.
+    \item Feuerstein, S., \& Pribyl, B. (2014). \textit{Oracle PL/SQL Programming} (6th ed.). O'Reilly Media.
     \item ASD-STE100. (2021). \textit{Simplified Technical English: Specification ASD-STE100}. Aerospace, Security and Defence Industries Association of Europe.
     \item Webster, F. V. (1958). \textit{Traffic Signal Settings}. Road Research Technical Paper No. 39, Road Research Laboratory, HMSO, London.
 \end{enumerate}
