@@ -30,7 +30,7 @@
         <span class="status-pulse-dot"></span>
         <span class="status-badge-title">GRID OPTIMAL</span>
         <span class="status-badge-divider">•</span>
-        <span class="status-badge-sub">ORACLE SYNC</span>
+        <span class="status-badge-sub">LIVE SYNC</span>
       </div>
       <div class="clock-display">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -221,8 +221,6 @@
     <div class="drawer-tabs">
       <button class="drawer-tab active" data-tab="tab-trace">LIVE EXECUTION TRACE</button>
       <button class="drawer-tab" data-tab="tab-audit">SHADOW AUDIT TRAIL</button>
-      <button class="drawer-tab" data-tab="tab-oracle">ORACLE PL/SQL SOURCE</button>
-      <button class="drawer-tab" data-tab="tab-postgres">POSTGRESQL PL/pgSQL</button>
     </div>
 
     <div class="drawer-content">
@@ -250,27 +248,6 @@
             <tbody id="audit-table-body"></tbody>
           </table>
         </div>
-      </div>
-
-      <!-- Tab 3: Oracle PL/SQL Source -->
-      <div id="tab-oracle" class="tab-pane">
-        <div class="code-selector">
-          <button class="code-pill active" data-code="oracle_emergency">proc_Emergency_Override</button>
-          <button class="code-pill" data-code="oracle_wma">func_Calculate_Congestion_Level</button>
-          <button class="code-pill" data-code="oracle_cursor">proc_Check_Zone_Diversion</button>
-          <button class="code-pill" data-code="oracle_trigger">trg_Signal_Phase_Audit</button>
-          <button class="code-pill" data-code="oracle_view">vw_Dashboard_Live</button>
-        </div>
-        <pre><code id="oracle-code-display" class="code-box">Loading Oracle PL/SQL source...</code></pre>
-      </div>
-
-      <!-- Tab 4: PostgreSQL PL/pgSQL Source -->
-      <div id="tab-postgres" class="tab-pane">
-        <div class="code-selector">
-          <button class="code-pill active" data-code="postgres_emergency">proc_Emergency_Override</button>
-          <button class="code-pill" data-code="postgres_trigger">trg_Signal_Phase_Audit</button>
-        </div>
-        <pre><code id="postgres-code-display" class="code-box">Loading PostgreSQL source...</code></pre>
       </div>
     </div>
   </aside>

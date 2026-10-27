@@ -25,7 +25,6 @@ let state = {
 
 let dashboardRows = [];
 let congestionList = [];
-let sqlSources = {};
 let traceLogs = [];
 
 let selectedCorridorByNode = {};
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     initTrafficSimulator(canvasEl, containerEl);
   }
 
-  await loadSQLSources();
   await refreshAll();
 
   startSimulationLoops();
@@ -181,20 +179,6 @@ function setupEventListeners() {
     });
   });
 
-  // Code Pills (Oracle / Postgres)
-  document.querySelectorAll('.code-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
-      const parent = pill.closest('.tab-pane');
-      parent.querySelectorAll('.code-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const codeKey = pill.dataset.code;
-      if (codeKey.startsWith('oracle')) {
-        document.getElementById('oracle-code-display').textContent = sqlSources[codeKey] || 'Source not available.';
-      } else {
-        document.getElementById('postgres-code-display').textContent = sqlSources[codeKey] || 'Source not available.';
-      }
-    });
-  });
 }
 
 // ----------------------------------------------------------------------------
@@ -252,16 +236,6 @@ async function fetchAuditLog() {
   }
 }
 
-async function loadSQLSources() {
-  try {
-    const res = await fetch('/api/sql-source');
-    sqlSources = await res.json();
-    document.getElementById('oracle-code-display').textContent = sqlSources.oracle_emergency || '';
-    document.getElementById('postgres-code-display').textContent = sqlSources.postgres_emergency || '';
-  } catch (err) {
-    console.error('loadSQLSources error:', err);
-  }
-}
 
 // ----------------------------------------------------------------------------
 // Emergency Preemption API Handling

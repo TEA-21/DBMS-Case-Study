@@ -398,23 +398,6 @@ export default defineConfig({
             return res.end(JSON.stringify(results));
           }
 
-          // 9. GET /api/sql-source: Return actual Oracle & Postgres project scripts
-          if (req.method === 'GET' && pathname === '/api/sql-source') {
-            try {
-              const readFile = (rel) => fs.readFileSync(path.join(projectRoot, rel), 'utf-8');
-              return res.end(JSON.stringify({
-                oracle_emergency: readFile('oracle/routines/01_proc_emergency_override.sql'),
-                oracle_wma: readFile('oracle/routines/02_func_congestion_level.sql'),
-                oracle_cursor: readFile('oracle/routines/03_cursor_regional_diversion.sql'),
-                oracle_trigger: readFile('oracle/triggers/01_trg_signal_phase_audit.sql'),
-                oracle_view: readFile('oracle/views/01_vw_dashboard_live.sql'),
-                postgres_emergency: readFile('postgresql/routines/01_proc_emergency_override.sql'),
-                postgres_trigger: readFile('postgresql/triggers/01_trg_signal_phase_audit.sql')
-              }));
-            } catch (err) {
-              return res.end(JSON.stringify({ error: err.message }));
-            }
-          }
 
           return next();
         });
